@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="8dp"
+    android:weightSum="100"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="5">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Drone Status"
+            android:textSize="20dp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="210dp">
+            <View
+                android:id="@+id/ref_placeholder"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerHorizontal="true"/>
+            <!--Invisible Central Reference Placeholder-->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@drawable/drone"
+                android:layout_toLeftOf="@id/ref_placeholder"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_toRightOf="@id/ref_placeholder"
+                android:paddingTop="25dp"
+                android:paddingLeft="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Battery Level: 100%"
+                    android:textSize="15dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Altitude: 400ft"
+                    android:textSize="15dp"/>
+                <TextView
+                    android:id="@+id/current_gps_lat"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Latitude: 21.539782"
+                    android:textSize="15dp"/>
+                <TextView
+                    android:id="@+id/current_gps_lng"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Longitude: -118.456872"
+                    android:textSize="15dp"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="95">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Current Location"
+            android:textSize="20dp"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="50">
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    class="com.google.android.gms.maps.SupportMapFragment"
+                    android:id="@+id/google_map_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/white_border"
+                android:id="@+id/relative_layout_SearchBar">
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:id="@+id/ic_magnify"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_magnify"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/ic_magnify"
+                    android:layout_centerVertical="true"
+                    android:textSize="15sp"
+                    android:textColor="#000"
+                    android:id="@+id/map_Search_Bar"
+                    android:background="@null"
+                    android:hint="Enter Address, City or Zip"
+                    android:imeOptions="actionSearch"/>
+            </RelativeLayout>
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:scaleType="centerCrop"
+                android:id="@+id/ic_gpsLocation"
+                android:src="@drawable/ic_gpslocation"/>
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|center_horizontal|center_vertical">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="Launch"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
