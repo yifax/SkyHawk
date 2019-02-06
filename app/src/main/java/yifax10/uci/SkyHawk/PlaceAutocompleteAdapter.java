@@ -1,5 +1,4 @@
 package yifax10.uci.SkyHawk;
-
 /*
  * Copyright (C) 2015 Google Inc. All Rights Reserved.
  *
@@ -15,7 +14,6 @@ package yifax10.uci.SkyHawk;
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -53,7 +51,7 @@ import java.util.concurrent.TimeoutException;
 public class PlaceAutocompleteAdapter
         extends ArrayAdapter<AutocompletePrediction> implements Filterable {
 
-    private static final String TAG = "PlaceAutocompleteAdapter";
+    private static final String TAG = "PlaceAutocompleteAdapt";
     private static final CharacterStyle STYLE_BOLD = new StyleSpan(Typeface.BOLD);
     /**
      * Current results returned by this adapter.
