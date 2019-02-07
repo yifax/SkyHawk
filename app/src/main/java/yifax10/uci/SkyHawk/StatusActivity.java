@@ -1,6 +1,10 @@
 package yifax10.uci.SkyHawk;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -12,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,19 +53,42 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
     private Boolean mLocationPermissionGranted = false;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-
+    private LatLng savedLocation;
     // widgets
-    //private AutoCompleteTextView mSearchText;
     private ImageView mGPS;
+    private Button mButton;
     private PlacesClient placesClient;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.status_and_maps);
-        //mSearchText = (AutoCompleteTextView) findViewById(R.id.map_Search_Bar);
-        mGPS = (ImageView) findViewById(R.id.ic_gpsLocation);
+        // Locate and Config Widgets
+        mGPS = findViewById(R.id.ic_gpsLocation);
+        mButton = findViewById(R.id.bt_launch);
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder=new Builder(StatusActivity.this);
+                builder.setIcon(R.drawable.ic_gpslocation);
+                builder.setTitle("Destination");
+                builder.setMessage("Direct Drone to "+savedLocation.latitude+", "+savedLocation.longitude);
+                builder.setPositiveButton("Okay", new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        Toast.makeText(StatusActivity.this, "Launching...", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        Toast.makeText(StatusActivity.this, "Cancelled",Toast.LENGTH_SHORT).show();
+                    }
+                });
+                AlertDialog b=builder.create();
+                b.show();
+            }
+        });
 
         //Set up Google Places API
         String apiKey = getString(R.string.google_maps_API_key);
@@ -135,7 +163,7 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private void geoLocate(String searchString){
-        Log.d(TAG, "geoLocate:geolocating the input string...");
+        Log.d(TAG, "geoLocate: geo locating...");
         Geocoder geocoder = new Geocoder(StatusActivity.this);
         List<Address> list = new ArrayList<>();
         try {
@@ -146,7 +174,8 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
         if(list.size()>0){
             Address address = list.get(0);
             Log.d(TAG,"geoLocate: found a location:" + address.toString());
-            moveCamera(new LatLng(address.getLatitude(),address.getLongitude()), Constants.DEFAULT_ZOOM,address.getAddressLine(0));
+            savedLocation = new LatLng(address.getLatitude(),address.getLongitude());
+            moveCamera(savedLocation, Constants.DEFAULT_ZOOM,address.getAddressLine(0));
         }
     }
 
@@ -162,7 +191,8 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
                                 if (task.isSuccessful()) {
                                     Log.d(TAG, "onComplete: found location!");
                                     Location currentLocation = (Location) task.getResult();
-                                    moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), Constants.DEFAULT_ZOOM, "Current Location");
+                                    savedLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                                    moveCamera(savedLocation, Constants.DEFAULT_ZOOM, "Current Location");
                                     refreshGPSData(currentLocation.getLatitude(), currentLocation.getLongitude());
                                 }else {
                                     Log.d(TAG, "onComplete: current location is null");
