@@ -26,7 +26,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -44,11 +43,6 @@ import java.util.List;
 public class StatusActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener{
     private static final String TAG = "StatusActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 123;
-    private static final int AUTOCOMPLETE_REQUEST_CODE = 23487;
-    private static final float DEFAULT_ZOOM = 15f;
-    private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
-            new LatLng(-40, -168), new LatLng(71,136));
 
     // vars
     private Boolean mLocationPermissionGranted = false;
@@ -107,6 +101,7 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map_fragment);
         mapFragment.getMapAsync(this);
     }
+
     private void initSearchBar(){
         Log.d(TAG, "init: initializing search bar...");
         // Initialize the AutocompleteSupportFragment.
@@ -151,7 +146,7 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
         if(list.size()>0){
             Address address = list.get(0);
             Log.d(TAG,"geoLocate: found a location:" + address.toString());
-            moveCamera(new LatLng(address.getLatitude(),address.getLongitude()),DEFAULT_ZOOM,address.getAddressLine(0));
+            moveCamera(new LatLng(address.getLatitude(),address.getLongitude()), Constants.DEFAULT_ZOOM,address.getAddressLine(0));
         }
     }
 
@@ -167,7 +162,7 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
                                 if (task.isSuccessful()) {
                                     Log.d(TAG, "onComplete: found location!");
                                     Location currentLocation = (Location) task.getResult();
-                                    moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM, "Current Location");
+                                    moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), Constants.DEFAULT_ZOOM, "Current Location");
                                     refreshGPSData(currentLocation.getLatitude(), currentLocation.getLongitude());
                                 }else {
                                     Log.d(TAG, "onComplete: current location is null");
@@ -204,7 +199,7 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
             initMap();
             initSearchBar();
         }else{
-            ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, permissions, Constants.LOCATION_PERMISSION_REQUEST_CODE);
         }
 
     }
@@ -214,7 +209,7 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
         mLocationPermissionGranted = false;
 
         switch (requestCode){
-            case LOCATION_PERMISSION_REQUEST_CODE: {
+            case Constants.LOCATION_PERMISSION_REQUEST_CODE: {
                 if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)){
                     mLocationPermissionGranted = true;
                     Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
