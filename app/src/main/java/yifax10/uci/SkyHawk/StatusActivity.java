@@ -2,6 +2,8 @@ package yifax10.uci.SkyHawk;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,11 +30,16 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class StatusActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener{
     private static final String TAG = "StatusActivity";
@@ -51,6 +58,7 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
     // widgets
     //private AutoCompleteTextView mSearchText;
     private ImageView mGPS;
+    private PlacesClient placesClient;
 
 
     @Override
@@ -59,6 +67,20 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
         setContentView(R.layout.status_and_maps);
         //mSearchText = (AutoCompleteTextView) findViewById(R.id.map_Search_Bar);
         mGPS = (ImageView) findViewById(R.id.ic_gpsLocation);
+
+        //Set up Google Places API
+        String apiKey = getString(R.string.google_maps_API_key);
+        if (apiKey.equals("")) {
+            Toast.makeText(this, getString(R.string.google_maps_API_key), Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), apiKey);
+        }
+        Places.initialize(getApplicationContext(), apiKey);
+        placesClient = Places.createClient(this);
+
+        //Get Current Location
         getLocationPermission();
     }
 
@@ -87,26 +109,6 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
     }
     private void initSearchBar(){
         Log.d(TAG, "init: initializing search bar...");
-        /*
-        // Construct a GeoDataClient for the Google Places API for Android.
-        mGeoDataClient = Places.getGeoDataClient(this, null);
-
-        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this, mGeoDataClient, LAT_LNG_BOUNDS, null);
-        mSearchText.setAdapter(mPlaceAutocompleteAdapter);
-        mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH
-                    || actionId == EditorInfo.IME_ACTION_DONE
-                    || event.getAction() == event.ACTION_DOWN
-                    || event.getAction() == event.KEYCODE_ENTER) {
-                    geoLocate();
-                }
-                return false;
-            }
-        });
-        */
-
         // Initialize the AutocompleteSupportFragment.
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
@@ -118,8 +120,8 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+                geoLocate(place.getName());
             }
 
             @Override
@@ -137,10 +139,8 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
         });
     }
 
-    /*
-    private void geoLocate(){
+    private void geoLocate(String searchString){
         Log.d(TAG, "geoLocate:geolocating the input string...");
-        String searchString = mSearchText.getText().toString();
         Geocoder geocoder = new Geocoder(StatusActivity.this);
         List<Address> list = new ArrayList<>();
         try {
@@ -154,7 +154,7 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
             moveCamera(new LatLng(address.getLatitude(),address.getLongitude()),DEFAULT_ZOOM,address.getAddressLine(0));
         }
     }
-    */
+
 
     private void getDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: getting the current location...");
