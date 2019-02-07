@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "yifax10.uci.SkyHawk"
-        minSdkVersion 15
+        minSdkVersion 14
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -29,5 +29,5 @@ dependencies {
     // Google Service (Map API)
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
-    implementation 'com.google.android.gms:play-services-places:16.0.0'
+    implementation 'com.google.android.libraries.places:places:1.0.0'
 }

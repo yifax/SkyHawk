@@ -101,6 +101,12 @@
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/white_border"
                 android:id="@+id/relative_layout_SearchBar">
+                <fragment android:id="@+id/autocomplete_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                    />
+                <!--
                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
@@ -119,6 +125,7 @@
                     android:background="@null"
                     android:hint="Enter Address, City or Zip"
                     android:imeOptions="actionSearch"/>
+                 -->
             </RelativeLayout>
             <ImageView
                 android:layout_width="25dp"
