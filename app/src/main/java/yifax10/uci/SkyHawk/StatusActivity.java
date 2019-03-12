@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -77,6 +78,8 @@ public class StatusActivity extends AppCompatActivity implements OnMapReadyCallb
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
                         Toast.makeText(StatusActivity.this, "Launching...", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(StatusActivity.this, OpenCVActivity.class);
+                        startActivity(intent);
                     }
                 });
                 builder.setNegativeButton("Cancel", new OnClickListener() {
